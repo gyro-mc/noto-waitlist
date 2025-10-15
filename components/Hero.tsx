@@ -244,7 +244,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative flex-1 flex flex-col items-center justify-center px-6 py-20 text-center font-deco overflow-hidden">
+    <section className="relative flex-1 flex  flex-col items-center justify-center px-6 py-20 text-center font-deco overflow-hidden">
       {/* Animated Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Large Gradient Orbs */}
