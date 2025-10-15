@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="min-h-screen scroll-mt-20" style={{ backgroundColor: '#EBECF1' }}>
       <Navbar />
-      <div className="pt-20">
+      <div className="">
 
       <Hero />
       <Benefits />

@@ -244,9 +244,43 @@ export default function Hero() {
   };
 
   return (
-    <section className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center font-deco ">
+    <section className="relative flex-1 flex flex-col items-center justify-center px-6 py-20 text-center font-deco overflow-hidden">
+      {/* Animated Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Large Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-400/20 to-cyan-400/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-l from-purple-400/15 to-pink-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-t from-indigo-400/10 to-blue-400/15 rounded-full blur-3xl animate-pulse delay-2000"></div>
+
+        {/* Medium Floating Orbs */}
+        <div className="absolute top-32 right-1/3 w-40 h-40 bg-gradient-to-br from-cyan-300/20 to-blue-300/15 rounded-full blur-2xl animate-float delay-500"></div>
+        <div className="absolute bottom-40 right-20 w-32 h-32 bg-gradient-to-tl from-purple-300/25 to-pink-300/20 rounded-full blur-2xl animate-drift delay-1500"></div>
+
+        {/* Floating Particles */}
+        <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-blue-500/40 rounded-full animate-bounce delay-500 shadow-lg shadow-blue-500/20"></div>
+        <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-purple-500/50 rounded-full animate-bounce delay-1000 shadow-lg shadow-purple-500/20"></div>
+        <div className="absolute bottom-1/3 left-1/5 w-2 h-2 bg-pink-500/60 rounded-full animate-bounce delay-1500 shadow-lg shadow-pink-500/20"></div>
+        <div className="absolute top-2/3 right-1/3 w-3.5 h-3.5 bg-indigo-500/45 rounded-full animate-bounce delay-700 shadow-lg shadow-indigo-500/20"></div>
+        <div className="absolute top-1/5 right-1/5 w-2.5 h-2.5 bg-cyan-500/50 rounded-full animate-float delay-300 shadow-lg shadow-cyan-500/20"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-3 h-3 bg-teal-500/40 rounded-full animate-drift delay-2000 shadow-lg shadow-teal-500/20"></div>
+
+        {/* Geometric Shapes */}
+        <div className="absolute top-16 right-16 w-8 h-8 border-2 border-blue-300/40 rotate-45 animate-spin-slow shadow-lg shadow-blue-300/10"></div>
+        <div className="absolute bottom-32 left-16 w-6 h-6 border-2 border-purple-300/50 animate-pulse shadow-lg shadow-purple-300/10"></div>
+        <div className="absolute top-1/2 left-8 w-5 h-5 bg-gradient-to-r from-blue-400/30 to-purple-400/25 rotate-12 animate-ping delay-2000 rounded-sm"></div>
+        <div className="absolute bottom-16 right-1/4 w-7 h-7 border-2 border-pink-300/35 rotate-12 animate-spin-slow delay-1000 rounded-full"></div>
+        <div className="absolute top-3/4 left-1/4 w-4 h-4 bg-gradient-to-bl from-cyan-400/40 to-indigo-400/30 animate-pulse delay-500 rounded-full"></div>
+
+        {/* Subtle Overlay Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/5 via-transparent to-purple-50/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-cyan-50/3 to-transparent"></div>
+
+        {/* Radial Gradient Background */}
+        <div className="absolute inset-0 bg-radial-gradient from-white/10 via-transparent to-transparent"></div>
+      </div>
+
       {/* Logo Icon */}
-      <div ref={logoRef} className="mb-10 ">
+      <div ref={logoRef} className="mb-10 mt-20">
         <Image
           src="/logo.png"
           alt="Noto Logo"
