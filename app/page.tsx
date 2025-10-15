@@ -7,13 +7,16 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen scroll-mt-20" style={{ backgroundColor: '#EBECF1' }}>
       <Navbar />
+      <div className="pt-20">
+
       <Hero />
       <Benefits />
       <FAQ />
       <Contact />
       <Footer />
+      </div>
     </div>
   );
 }
