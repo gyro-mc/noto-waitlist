@@ -25,14 +25,17 @@ export default function Navbar() {
   useEffect(() => {
     // Simple scroll handler to detect active section
     const handleScroll = () => {
-      const sections = ['benefits', 'integrations', 'testimonials', 'faq'];
-      
+      const sections = ["benefits", "integrations", "connect", "faq"];
+
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
           // Check if section is in the middle of the viewport
-          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+          if (
+            rect.top <= window.innerHeight / 2 &&
+            rect.bottom >= window.innerHeight / 2
+          ) {
             setActiveSection(sectionId);
             break;
           }
@@ -40,14 +43,26 @@ export default function Navbar() {
       }
     };
 
-    // Add scroll listener
-    window.addEventListener('scroll', handleScroll);
+    // Handle resize to close mobile menu on desktop
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    // Add event listeners
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
     // Check initial state
     handleScroll();
 
     // Cleanup
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     // Create collapse timeline (only for desktop)
@@ -177,7 +192,7 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        className="w-full lg:h-20 fixed lg:w-300 right-1/2 mt-7 rounded-[44px] z-50 translate-x-1/2 px-6 py-4 flex items-center justify-between bubble-shadow-border bg-background"
+        className="w-full max-w-7xl lg:h-20 fixed lg:w-300 right-1/2 mt-2 sm:mt-4 lg:mt-7 rounded-[44px] z-50 translate-x-1/2 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between bubble-shadow-border bg-background mx-4 sm:mx-6 lg:mx-0"
       >
         {/* Logo */}
         <div className="flex items-center gap-2 font-deco">
@@ -185,13 +200,13 @@ export default function Navbar() {
             ref={logoRef}
             src="/logo.png"
             alt="Noto Logo"
-            width={50}
-            height={50}
-            className="object-contain"
+            width={40}
+            height={40}
+            className="object-contain sm:w-[50px] sm:h-[50px]"
           />
           <span
             ref={logoTextRef}
-            className="text-2xl font-medium overflow-hidden whitespace-nowrap"
+            className="text-xl sm:text-2xl font-medium overflow-hidden whitespace-nowrap"
           >
             Noto
           </span>
@@ -205,9 +220,9 @@ export default function Navbar() {
           <Link
             href="#benefits"
             className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive('benefits') 
-                ? 'bg-blue-500 text-white' 
-                : 'text-gray-600  '
+              isActive("benefits")
+                ? "bg-blue-500 text-white"
+                : "text-gray-600  "
             }`}
           >
             Benefits
@@ -215,32 +230,32 @@ export default function Navbar() {
           <Link
             href="#integrations"
             className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive('integrations') 
-                ? 'bg-blue-500 text-white ' 
-                : 'text-gray-600 hover:text-gray-900 '
+              isActive("integrations")
+                ? "bg-blue-500 text-white "
+                : "text-gray-600 hover:text-gray-900 "
             }`}
           >
             Integrations
           </Link>
           <Link
-            href="#testimonials"
-            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive('testimonials') 
-                ? 'bg-blue-500 text-white' 
-                : 'text-gray-600 hover:text-gray-900 '
-            }`}
-          >
-            Testimonials
-          </Link>
-          <Link
             href="#faq"
             className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive('faq') 
-                ? 'bg-blue-500 text-white' 
-                : 'text-gray-600 hover:text-gray-900 '
+              isActive("faq")
+                ? "bg-blue-500 text-white"
+                : "text-gray-600 hover:text-gray-900 "
             }`}
           >
             FAQ
+          </Link>
+          <Link
+            href="#connect"
+            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
+              isActive("connect")
+                ? "bg-blue-500 text-white"
+                : "text-gray-600 hover:text-gray-900 "
+            }`}
+          >
+            Connect
           </Link>
         </div>
 
@@ -263,9 +278,14 @@ export default function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="md:hidden w-10 h-10 flex items-center justify-center rounded-full border-buble-shadow bg-background"
+          className="md:hidden w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full border-buble-shadow bg-background hover:scale-105 transition-transform active:scale-95"
+          aria-label="Toggle mobile menu"
         >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {isMobileMenuOpen ? (
+            <X size={18} className="sm:w-5 sm:h-5" />
+          ) : (
+            <Menu size={18} className="sm:w-5 sm:h-5" />
+          )}
         </button>
       </nav>
 
@@ -273,16 +293,16 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div
           ref={mobileMenuRef}
-          className="fixed top-24 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-background rounded-2xl bubble-shadow-border z-40 md:hidden"
+          className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 w-[calc(100vw-2rem)] max-w-sm bg-background rounded-2xl bubble-shadow-border z-40 md:hidden"
         >
-          <div className="p-6 space-y-2">
+          <div className="p-4 sm:p-6 space-y-1">
             <Link
               href="#benefits"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-3 rounded-lg transition-all duration-300 ${
-                isActive('benefits') 
-                  ? 'bg-blue-500 text-white' 
-                  : 'text-gray-600 hover:text-gray-900 '
+              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
+                isActive("benefits")
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
               Benefits
@@ -290,10 +310,10 @@ export default function Navbar() {
             <Link
               href="#integrations"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-3 rounded-lg transition-all duration-300 ${
-                isActive('integrations') 
-                  ? 'bg-blue-500 text-white' 
-                  : 'text-gray-600 hover:text-gray-900 '
+              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
+                isActive("integrations")
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
               Integrations
@@ -301,10 +321,10 @@ export default function Navbar() {
             <Link
               href="#testimonials"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-3 rounded-lg transition-all duration-300 ${
-                isActive('testimonials') 
-                  ? 'bg-blue-500 text-white' 
-                  : 'text-gray-600 hover:text-gray-900 '
+              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
+                isActive("testimonials")
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
               Testimonials
@@ -312,22 +332,33 @@ export default function Navbar() {
             <Link
               href="#faq"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-3 rounded-lg transition-all duration-300 ${
-                isActive('faq') 
-                  ? 'bg-blue-500 text-white' 
-                  : 'text-gray-600 hover:text-gray-900 '
+              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
+                isActive("faq")
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
               FAQ
             </Link>
-            <div className="pt-4 border-t border-gray-200 cursor-pointer">
-              <button className="w-full text-black bg-background px-6 py-3 border-buble-shadow">
-                <Phone size={16} />
+            <div className="pt-4 border-t border-gray-200">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full text-black bg-background px-6 py-4 border-buble-shadow rounded-xl flex items-center justify-center gap-2 font-medium hover:bg-gray-50 active:bg-gray-100 transition-colors"
+              >
+                <Phone size={18} />
                 Book a call
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-20 z-30 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
       )}
     </>
   );
