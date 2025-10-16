@@ -1,7 +1,6 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import keys from "@/noto-waiting-list.json";
 
 // Zod schema for validation
 const WaitlistSchema = z.object({
@@ -46,14 +45,14 @@ export async function POST(
 
     // Create Google Sheets client
     const auth = await google.auth.getClient({
-      projectId: keys.project_id,
+      projectId: process.env.GOOGLE_PROJECT_ID!,
       credentials: {
-        type: "service_account",
-        private_key: keys.private_key,
-        client_email: keys.client_email,
-        client_id: keys.client_id,
-        token_url: keys.token_uri,
-        universe_domain: "googleapis.com",
+        type: process.env.GOOGLE_SERVICE_ACCOUNT_TYPE as "service_account",
+        private_key: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_CLIENT_EMAIL!,
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        token_url: process.env.GOOGLE_TOKEN_URI!,
+        universe_domain: process.env.GOOGLE_UNIVERSE_DOMAIN!,
       },
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
