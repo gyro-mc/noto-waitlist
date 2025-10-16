@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import toast from "react-hot-toast";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,7 +11,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    message: ""
+    content: ""
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,13 +147,48 @@ export default function Contact() {
       });
     }
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log("Contact form submitted:", formData);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      const response = await fetch('/api/mails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", content: "" });
+      } else {
+        toast.error(data.message);
+        // Animate form back to normal state
+        if (formRef.current) {
+          gsap.to(formRef.current, {
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 0.2
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('Something went wrong. Please try again later.');
+      // Animate form back to normal state
+      if (formRef.current) {
+        gsap.to(formRef.current, {
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 0.2
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -212,9 +248,9 @@ export default function Contact() {
             {/* Message */}
             <div ref={textareaRef}>
               <textarea
-                name="message"
+                name="content"
                 placeholder="Your message..."
-                value={formData.message}
+                value={formData.content}
                 onChange={handleChange}
                 required
                 rows={6}

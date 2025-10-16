@@ -1,56 +1,50 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import keys from "@/noto-waiting-list.json";
 
+// Zod schema for validation
+const WaitlistSchema = z.object({
+  email: z
+    .email("Please provide a valid email address")
+    .min(1, "Email is required"),
+});
+
 // Types for better type safety
-interface WaitlistRequest {
-  email: string;
-}
+type WaitlistRequest = z.infer<typeof WaitlistSchema>;
 
 interface ApiResponse {
   success: boolean;
   message: string;
+  errors?: string[];
 }
 
 // Constants
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!;
 const SHEET_RANGE = "Sheet1!A:B";
 
-// Email validation helper
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<ApiResponse>> {
   try {
-    // Parse and validate request body
-    const body: WaitlistRequest = await req.json();
+    // Parse request body
+    const body = await req.json();
 
-    if (!body || !body.email) {
+    // Validate with Zod
+    const validation = WaitlistSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(
         {
           success: false,
-          message: "Email is required",
+          message: "Validation failed",
+          errors: ["invalid Email"],
         },
         { status: 400 }
       );
     }
 
-    const { email } = body;
-
-    // Validate email format
-    if (!isValidEmail(email)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Please provide a valid email address",
-        },
-        { status: 400 }
-      );
-    }
+    const { email } = validation.data;
 
     // Create Google Sheets client
     const auth = await google.auth.getClient({
@@ -88,7 +82,7 @@ export async function POST(
     }
 
     // Add new entry to the sheet
-    const createdAt = new Date().toISOString();
+    const createdAt = new Date().toString();
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
       range: SHEET_RANGE,

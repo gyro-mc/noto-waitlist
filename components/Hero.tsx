@@ -3,10 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
+import toast from "react-hot-toast";
 
 export default function Hero() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const mainHeadingRef = useRef<HTMLHeadingElement>(null);
   const subHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -15,9 +18,6 @@ export default function Hero() {
 
   // Function to wrap text in spans for line-by-line animation
   const wrapTextForAnimation = (element: HTMLElement): void => {
-    // Get the original HTML content to preserve spans
-    const originalHTML = element.innerHTML;
-
     // Create wrapper spans for each logical line
     const firstPart =
       "Noto brings all your courses and notes together in one intelligent space";
@@ -233,13 +233,41 @@ export default function Hero() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      // Here you would typically send the email to your backend
-      console.log("Email submitted:", email);
-      setIsSubmitted(true);
-      setEmail("");
+    if (!email.trim()) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/waiting-list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("🎉 Welcome to the waitlist! We'll be in touch soon.", {
+          duration: 4000,
+        });
+        setIsSubmitted(true);
+        setEmail("");
+      } else {
+        toast.error(data.message || "Something went wrong. Please try again.");
+        setError(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      const errorMessage =
+        "Network error. Please check your connection and try again.";
+      toast.error(errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -351,19 +379,29 @@ export default function Hero() {
             onSubmit={handleSubmit}
             className="space-y-4 flex flex-col items-center"
           >
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 w-full">
+                <p className="text-red-800 text-sm">{error}</p>
+              </div>
+            )}
             <input
               type="email"
               placeholder="Enter your email (preferably your school email)"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null); // Clear error when user starts typing
+              }}
               required
-              className="w-full px-4 py-3 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent lg:w-[60%] bubble-shadow-border rounded-4xl "
+              disabled={isLoading}
+              className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent lg:w-[60%] bubble-shadow-border rounded-4xl disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <button
               type="submit"
-              className="w-full   py-5 cursor-pointer hover:bg-gray-200 transition-colors hover:text-blue-white lg:w-[100px] border-buble-shadow bg-background text-black rounded-4xl "
+              disabled={isLoading || !email.trim()}
+              className="w-full py-5 transition-all duration-200 lg:w-[100px] border-buble-shadow bg-background text-black rounded-4xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-background enabled:hover:bg-gray-200 enabled:cursor-pointer"
             >
-              Join
+              {isLoading ? "Joining..." : "Join"}
             </button>
           </form>
         )}
