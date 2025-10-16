@@ -44,7 +44,7 @@ export async function POST(
       from: "Noto Contact <onboarding@resend.dev>",
       to: ["delivered@resend.dev"],
       subject: `New Contact Form Submission from ${name}`,
-      react: EmailTemplate({ firstName: "John" }),
+      react: EmailTemplate({name,email,content}),
     });
     console.log(data);
     if (error) {
