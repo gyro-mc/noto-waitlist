@@ -29,7 +29,7 @@ export default function Footer() {
   useEffect(() => {
     const socialElements = socialRefs.current ;
 
-    socialElements.forEach((element, index) => {
+    socialElements.forEach((element) => {
       if (!element) return;
 
       const handleMouseEnter = () => {

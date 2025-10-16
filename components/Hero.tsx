@@ -262,6 +262,7 @@ export default function Hero() {
         setError(data.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
+      console.log(err?"":"")
       const errorMessage =
         "Network error. Please check your connection and try again.";
       toast.error(errorMessage);
@@ -371,7 +372,7 @@ export default function Hero() {
         {isSubmitted ? (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <p className="text-green-800 font-medium">
-              Thanks for joining! We'll be in touch soon.
+              Thanks for joining! We&apos;ll be in touch soon.
             </p>
           </div>
         ) : (

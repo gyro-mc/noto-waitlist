@@ -10,8 +10,6 @@ const WaitlistSchema = z.object({
     .min(1, "Email is required"),
 });
 
-// Types for better type safety
-type WaitlistRequest = z.infer<typeof WaitlistSchema>;
 
 interface ApiResponse {
   success: boolean;

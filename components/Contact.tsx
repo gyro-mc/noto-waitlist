@@ -197,10 +197,10 @@ export default function Contact() {
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-12">
           <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Let's <span className="text-blue-500 connect-span cursor-pointer">Stay Connected</span>
+            Let&apos;s <span className="text-blue-500 connect-span cursor-pointer">Stay Connected</span>
           </h2>
           <p ref={subtitleRef} className="text-lg text-gray-600">
-            Have questions or feedback? Reach out, and we'll get back to you in no time.
+            Have questions or feedback? Reach out, and we&apos ll get back to you in no time.
           </p>
         </div>
 
@@ -214,7 +214,7 @@ export default function Contact() {
               Message Sent Successfully!
             </h3>
             <p className="text-green-700">
-              Thanks for reaching out. We'll get back to you within 24 hours.
+              Thanks for reaching out. We&apos;ll get back to you within 24 hours.
             </p>
           </div>
         ) : (

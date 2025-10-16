@@ -144,7 +144,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Got Questions?{" "}
-            <span className="text-blue-500">We've Got Answers.</span>
+            <span className="text-blue-500">We&apos;ve Got Answers.</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Quick, clear answers to help you get started with Noto.
