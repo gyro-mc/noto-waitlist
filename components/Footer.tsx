@@ -27,7 +27,7 @@ export default function Footer() {
 
   // Handle hover animations for social icons
   useEffect(() => {
-    const socialElements = socialRefs.current;
+    const socialElements = socialRefs.current ;
 
     socialElements.forEach((element, index) => {
       if (!element) return;
