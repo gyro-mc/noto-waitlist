@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+#google sheets
+noto-waiting-list.json
+
+#kiro
+/.kiro/
