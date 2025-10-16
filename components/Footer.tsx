@@ -1,8 +1,13 @@
+"use client"
+import Image from "next/image";
 import Link from "next/link";
-import { Twitter, Linkedin, Instagram, Facebook } from "lucide-react";
+import { X, Linkedin, Instagram, Facebook } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const socialRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const footerLinks = [
     { name: "Benefits", href: "#benefits" },
@@ -10,23 +15,85 @@ export default function Footer() {
     { name: "Testimonials", href: "#testimonials" },
     { name: "FAQ", href: "#faq" },
     { name: "Contact", href: "#contact" },
-    { name: "404", href: "/404" }
+    { name: "404", href: "/404" },
   ];
 
   const socialLinks = [
-    { name: "Twitter", icon: Twitter, href: "#" },
+    { name: "X (Twitter)", icon: X, href: "#" },
     { name: "LinkedIn", icon: Linkedin, href: "#" },
     { name: "Instagram", icon: Instagram, href: "#" },
-    { name: "Facebook", icon: Facebook, href: "#" }
+    { name: "Facebook", icon: Facebook, href: "#" },
   ];
 
+  // Handle hover animations for social icons
+  useEffect(() => {
+    const socialElements = socialRefs.current;
+
+    socialElements.forEach((element, index) => {
+      if (!element) return;
+
+      const handleMouseEnter = () => {
+        gsap.to(element, {
+          backgroundColor: "#60a5fa", // blue-400
+          duration: 0.2,
+          ease: "power2.out",
+        });
+
+        const icon = element.querySelector("svg");
+        if (icon) {
+          gsap.to(icon, {
+            color: "#ffffff", // white
+            duration: 0.2,
+            ease: "power2.out",
+          });
+        }
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(element, {
+          backgroundColor: "transparent",
+          duration: 0.2,
+          ease: "power2.out",
+        });
+
+        const icon = element.querySelector("svg");
+        if (icon) {
+          gsap.to(icon, {
+            color: "#6b7280", // gray-600
+            duration: 0.2,
+            ease: "power2.out",
+          });
+        }
+      };
+
+      element.addEventListener("mouseenter", handleMouseEnter);
+      element.addEventListener("mouseleave", handleMouseLeave);
+
+      // Cleanup function for this specific element
+      return () => {
+        element.removeEventListener("mouseenter", handleMouseEnter);
+        element.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    });
+
+    // Return cleanup function for all elements
+    return () => {
+      socialElements.forEach((element) => {
+        if (element) {
+          element.removeEventListener("mouseenter", () => {});
+          element.removeEventListener("mouseleave", () => {});
+        }
+      });
+    };
+  }, []);
+
   return (
-    <footer className="bg-gray-50 py-12 px-6" >
-      <div className="max-w-6xl mx-auto">
+    <footer className="bg-gray-50 py-12 px-6">
+      <div className="max-w-3xl mx-auto">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">N</span>
+          <div className="w-24 h-24  rounded-full flex items-center justify-center mx-auto mb-4">
+            <Image src={"/logo.png"} alt={"logo"} height={80} width={80} />
           </div>
         </div>
 
@@ -42,36 +109,32 @@ export default function Footer() {
             </Link>
           ))}
         </div>
-
-        {/* Copyright */}
-        <div className="text-center mb-6">
+        {/* Copyright and Social Links in one line */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+          {/* Copyright */}
           <p className="text-gray-500 text-sm">
             © {currentYear} All Rights Reserved
           </p>
-        </div>
 
-        {/* Social Links */}
-        <div className="flex justify-center gap-4">
-          {socialLinks.map((social) => {
-            const IconComponent = social.icon;
-            return (
-              <a
-                key={social.name}
-                href={social.href}
-                className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-blue-500 hover:bg-blue-50 transition-colors shadow-sm"
-                aria-label={social.name}
-              >
-                <IconComponent className="w-5 h-5" />
-              </a>
-            );
-          })}
-        </div>
-
-        {/* Made in France Badge */}
-        <div className="text-center mt-8">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-white text-gray-600 shadow-sm">
-            🇫🇷 Made in France
-          </span>
+          {/* Social Links */}
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social, index) => {
+              const IconComponent = social.icon;
+              return (
+                <a
+                  key={social.name}
+                  ref={(el) => {
+                    socialRefs.current[index] = el;
+                  }}
+                  href={social.href}
+                  className="w-14 h-14 border-buble-shadow rounded-2xl flex items-center justify-center text-gray-600 shadow-sm cursor-pointer transition-colors duration-300"
+                  aria-label={social.name}
+                >
+                  <IconComponent className="w-5 h-5" />
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </footer>

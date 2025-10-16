@@ -3,16 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Phone, Menu, X } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import { Mail } from "lucide-react";
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState<boolean>(false);
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoTextRef = useRef<HTMLSpanElement>(null);
@@ -20,8 +19,7 @@ export default function Navbar() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const buttonTextRef = useRef<HTMLSpanElement>(null);
   const buttonIconRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-
+  const buttonIconRefAn = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Simple scroll handler to detect active section
     const handleScroll = () => {
@@ -43,16 +41,8 @@ export default function Navbar() {
       }
     };
 
-    // Handle resize to close mobile menu on desktop
-    const handleResize = () => {
-      if (window.innerWidth >= 768 && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
     // Add event listeners
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleResize);
 
     // Check initial state
     handleScroll();
@@ -60,9 +50,8 @@ export default function Navbar() {
     // Cleanup
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
-  }, [isMobileMenuOpen]);
+  }, []);
 
   useEffect(() => {
     // Create collapse timeline (only for desktop)
@@ -143,16 +132,28 @@ export default function Navbar() {
       trigger: "body",
       start: "20% top",
       onEnter: () => {
-        if (window.innerWidth >= 768) collapseTimeline.play();
+        if (window.innerWidth >= 1024) {
+          collapseTimeline.play();
+          setIsNavbarCollapsed(true);
+        }
       },
       onLeave: () => {
-        if (window.innerWidth >= 768) collapseTimeline.reverse();
+        if (window.innerWidth >= 1024) {
+          collapseTimeline.reverse();
+          setIsNavbarCollapsed(false);
+        }
       },
       onEnterBack: () => {
-        if (window.innerWidth >= 768) collapseTimeline.play();
+        if (window.innerWidth >= 1024) {
+          collapseTimeline.play();
+          setIsNavbarCollapsed(true);
+        }
       },
       onLeaveBack: () => {
-        if (window.innerWidth >= 768) collapseTimeline.reverse();
+        if (window.innerWidth >= 1024) {
+          collapseTimeline.reverse();
+          setIsNavbarCollapsed(false);
+        }
       },
     });
 
@@ -162,204 +163,239 @@ export default function Navbar() {
     };
   }, []);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  // Handle the hover animation for the "Mail us" button
+  useEffect(() => {
+    const button = buttonRef.current;
+    const buttonText = buttonTextRef.current;
+    const buttonIcon = buttonIconRefAn.current;
+    const staticIcon = buttonIconRef.current;
 
-    if (mobileMenuRef.current) {
-      if (!isMobileMenuOpen) {
-        // Open menu
-        gsap.fromTo(
-          mobileMenuRef.current,
-          { opacity: 0, y: -20 },
-          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
-        );
+    if (!button || !buttonText || !buttonIcon || !staticIcon) return;
+
+    // Set initial state for animated icon
+    gsap.set(buttonIcon, {
+      x: -30,
+      rotation: -180,
+      scale: 0.8,
+    });
+
+    const handleMouseEnter = () => {
+      if (isNavbarCollapsed) {
+        // Simple hover effect when collapsed - just change colors
+        gsap.to(button, {
+          backgroundColor: "#60a5fa", // blue-400
+          duration: 0.2,
+          ease: "power2.out",
+        });
+        gsap.to(staticIcon, {
+          color: "#ffffff", // white
+          duration: 0.2,
+          ease: "power2.out",
+        });
       } else {
-        // Close menu
-        gsap.to(mobileMenuRef.current, {
+        // Complex animation when expanded
+        const tl = gsap.timeline();
+
+        // Animate text out and background change
+        tl.to(buttonText, {
           opacity: 0,
-          y: -20,
+          x: 20,
+          duration: 0.2,
+          ease: "power2.out",
+        })
+          // Change background color
+          .to(
+            button,
+            {
+              backgroundColor: "#60a5fa", // blue-400
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            0
+          )
+          // Animate icon in from left with rotation
+          .to(
+            buttonIcon,
+            {
+              opacity: 1,
+              x: 0,
+              rotation: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: "back.out(1.7)",
+            },
+            0.1
+          );
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (isNavbarCollapsed) {
+        // Simple hover effect when collapsed - reset colors
+        gsap.to(button, {
+          backgroundColor: "transparent",
+          duration: 0.2,
+          ease: "power2.out",
+        });
+        gsap.to(staticIcon, {
+          color: "#000000", // black
+          duration: 0.2,
+          ease: "power2.out",
+        });
+      } else {
+        // Complex animation when expanded
+        const tl = gsap.timeline();
+
+        // Animate icon out
+        tl.to(buttonIcon, {
+          opacity: 0,
+          x: 30,
+          rotation: 180,
+          scale: 0.8,
           duration: 0.2,
           ease: "power2.in",
+        })
+          // Reset background color
+          .to(
+            button,
+            {
+              backgroundColor: "transparent",
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            0
+          )
+          // Animate text back in
+          .to(
+            buttonText,
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            0.1
+          );
+      }
+    };
+
+    const handleClick = () => {
+      const contactSection = document.getElementById("connect");
+      if (contactSection) {
+        contactSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
         });
       }
-    }
-  };
+    };
+
+    button.addEventListener("click", handleClick);
+    
+    button.addEventListener("mouseenter", handleMouseEnter);
+    button.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      button.removeEventListener("mouseenter", handleMouseEnter);
+      button.removeEventListener("mouseleave", handleMouseLeave);
+      button.removeEventListener("click", handleClick);
+    };
+  }, [isNavbarCollapsed]);
 
   // Simple helper to get link classes
   const isActive = (sectionId: string) => activeSection === sectionId;
 
   return (
-    <>
-      <nav
-        ref={navRef}
-        className="w-full max-w-7xl lg:h-20 fixed lg:w-300 right-1/2 mt-2 sm:mt-4 lg:mt-7 rounded-[44px] z-50 translate-x-1/2 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between bubble-shadow-border bg-background mx-4 sm:mx-6 lg:mx-0"
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-2 font-deco">
-          <Image
-            ref={logoRef}
-            src="/logo.png"
-            alt="Noto Logo"
-            width={40}
-            height={40}
-            className="object-contain sm:w-[50px] sm:h-[50px]"
-          />
-          <span
-            ref={logoTextRef}
-            className="text-xl sm:text-2xl font-medium overflow-hidden whitespace-nowrap"
-          >
-            Noto
-          </span>
-        </div>
-
-        {/* Desktop Navigation Links */}
-        <div
-          ref={navLinksRef}
-          className="hidden md:flex items-center gap-2 font-medium overflow-hidden"
-        >
-          <Link
-            href="#benefits"
-            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive("benefits")
-                ? "bg-blue-500 text-white"
-                : "text-gray-600  "
-            }`}
-          >
-            Benefits
-          </Link>
-          <Link
-            href="#integrations"
-            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive("integrations")
-                ? "bg-blue-500 text-white "
-                : "text-gray-600 hover:text-gray-900 "
-            }`}
-          >
-            Integrations
-          </Link>
-          <Link
-            href="#faq"
-            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive("faq")
-                ? "bg-blue-500 text-white"
-                : "text-gray-600 hover:text-gray-900 "
-            }`}
-          >
-            FAQ
-          </Link>
-          <Link
-            href="#connect"
-            className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
-              isActive("connect")
-                ? "bg-blue-500 text-white"
-                : "text-gray-600 hover:text-gray-900 "
-            }`}
-          >
-            Connect
-          </Link>
-        </div>
-
-        {/* Desktop CTA Button */}
-        <button
-          ref={buttonRef}
-          className="hidden md:flex text-black bg-background px-6 py-2 border-buble-shadow rounded-4xl items-center justify-center relative overflow-hidden"
-        >
-          <span ref={buttonTextRef} className="whitespace-nowrap">
-            Book a call
-          </span>
-          <div
-            ref={buttonIconRef}
-            className="absolute inset-0 flex items-center justify-center opacity-0 "
-          >
-            <Phone size={16} />
-          </div>
-        </button>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMobileMenu}
-          className="md:hidden w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full border-buble-shadow bg-background hover:scale-105 transition-transform active:scale-95"
-          aria-label="Toggle mobile menu"
-        >
-          {isMobileMenuOpen ? (
-            <X size={18} className="sm:w-5 sm:h-5" />
-          ) : (
-            <Menu size={18} className="sm:w-5 sm:h-5" />
-          )}
-        </button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 w-[calc(100vw-2rem)] max-w-sm bg-background rounded-2xl bubble-shadow-border z-40 md:hidden"
-        >
-          <div className="p-4 sm:p-6 space-y-1">
-            <Link
-              href="#benefits"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
-                isActive("benefits")
-                  ? "bg-blue-500 text-white shadow-lg"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
-              }`}
-            >
-              Benefits
-            </Link>
-            <Link
-              href="#integrations"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
-                isActive("integrations")
-                  ? "bg-blue-500 text-white shadow-lg"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
-              }`}
-            >
-              Integrations
-            </Link>
-            <Link
-              href="#testimonials"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
-                isActive("testimonials")
-                  ? "bg-blue-500 text-white shadow-lg"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
-              }`}
-            >
-              Testimonials
-            </Link>
-            <Link
-              href="#faq"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`link-bubble block px-4 py-4 rounded-xl transition-all duration-300 text-center font-medium ${
-                isActive("faq")
-                  ? "bg-blue-500 text-white shadow-lg"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100"
-              }`}
-            >
-              FAQ
-            </Link>
-            <div className="pt-4 border-t border-gray-200">
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full text-black bg-background px-6 py-4 border-buble-shadow rounded-xl flex items-center justify-center gap-2 font-medium hover:bg-gray-50 active:bg-gray-100 transition-colors"
-              >
-                <Phone size={18} />
-                Book a call
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-20 z-30 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
+    <nav
+      ref={navRef}
+      className="hidden lg:flex max-w-7xl h-20 fixed w-300 right-1/2 mt-7 rounded-[44px] z-50 translate-x-1/2 px-6 py-4 items-center justify-between bubble-shadow-border bg-background"
+    >
+      {/* Logo */}
+      <div className="flex items-center gap-2 font-deco">
+        <Image
+          ref={logoRef}
+          src="/logo.png"
+          alt="Noto Logo"
+          width={50}
+          height={50}
+          className="object-contain"
         />
-      )}
-    </>
+        <span
+          ref={logoTextRef}
+          className="text-2xl font-medium overflow-hidden whitespace-nowrap"
+        >
+          Noto
+        </span>
+      </div>
+
+      {/* Desktop Navigation Links */}
+      <div
+        ref={navLinksRef}
+        className="flex items-center gap-2 font-medium overflow-hidden"
+      >
+        <Link
+          href="#benefits"
+          className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
+            isActive("benefits")
+              ? "bg-blue-500 text-white"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          Benefits
+        </Link>
+        <Link
+          href="#integrations"
+          className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
+            isActive("integrations")
+              ? "bg-blue-500 text-white"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          Integrations
+        </Link>
+        <Link
+          href="#faq"
+          className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
+            isActive("faq")
+              ? "bg-blue-500 text-white"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          FAQ
+        </Link>
+        <Link
+          href="#connect"
+          className={`whitespace-nowrap link-bubble px-3 py-2 rounded-full transition-all duration-300 ${
+            isActive("connect")
+              ? "bg-blue-500 text-white"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          Connect
+        </Link>
+      </div>
+
+      {/* Desktop CTA Button */}
+
+      <button
+        ref={buttonRef}
+        className="cursor-pointer  flex text-black bg-background px-6 py-2 border-buble-shadow rounded-4xl items-center justify-center relative overflow-hidden transition-colors duration-300"
+      >
+        <span ref={buttonTextRef} className="whitespace-nowrap">
+          Mail us
+        </span>
+        <div
+          ref={buttonIconRef}
+          className="absolute inset-0 flex items-center justify-center opacity-0"
+        >
+          <Mail size={16} />
+        </div>
+        <div
+          ref={buttonIconRefAn}
+          className="absolute inset-0 flex items-center justify-center opacity-0"
+        >
+          <Mail size={16} />
+        </div>
+      </button>
+    </nav>
   );
 }
