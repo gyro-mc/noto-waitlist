@@ -117,7 +117,7 @@
 
 @layer base {
   html {
-    @apply scroll-smooth;
+    /* @apply scroll-smooth; - Removed for Lenis */
   }
   * {
     @apply border-border outline-ring/50;
@@ -163,13 +163,16 @@
 }
 .bubble-shadow-border {
   border: 4px solid #f1f1f7;
-  box-shadow: 0 10px 15px -3px var(--color-shadow-color),
+  box-shadow:
+    0 10px 15px -3px var(--color-shadow-color),
     /* outer shadow */ 0 4px 6px -4px var(--color-shadow-color),
     /* outer shadow */ inset 0 4px 4px var(--color-shadow-color); /* inner shadow */
 }
 .border-buble-shadow {
-  box-shadow: 5px 5px 15px -2px var(--color-shadow-color),
-    2px 2px 4px var(--color-shadow-color), -1px -1px 14px white;
+  box-shadow:
+    5px 5px 15px -2px var(--color-shadow-color),
+    2px 2px 4px var(--color-shadow-color),
+    -1px -1px 14px white;
 }
 .link-bubble {
   @apply cursor-pointer px-6 py-2 inline-block m-1 rounded-2xl hover:text-blue-400  transition-all duration-300;
@@ -178,17 +181,21 @@
 }
 
 .link-bubble:hover {
-  box-shadow: 4px 3px 15px -2px var(--color-shadow-color),
-    2px 2px 4px var(--color-shadow-color), -1px -2px 2px white;
+  box-shadow:
+    4px 3px 15px -2px var(--color-shadow-color),
+    2px 2px 4px var(--color-shadow-color),
+    -1px -2px 2px white;
 }
 
 .benefit-shadow {
-  box-shadow: 4px 3px 15px -2px var(--color-shadow-color),
+  box-shadow:
+    4px 3px 15px -2px var(--color-shadow-color),
     -4px -3px 15px -2px var(--color-shadow-color);
 }
 .wave-shadow {
   border: 6px solid var(--color-background);
-  box-shadow: 2px 2px 5px 2px var(--color-shadow-color),
+  box-shadow:
+    2px 2px 5px 2px var(--color-shadow-color),
     2px 2px 5px 4px var(--color-background),
     inset 0 1px 4px var(--color-shadow-color);
 }
@@ -277,4 +284,25 @@ html::-webkit-scrollbar-thumb:hover {
 /* Radial gradient utility */
 .bg-radial-gradient {
   background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
+/* Lenis Smooth Scrolling */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }

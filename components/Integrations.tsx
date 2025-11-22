@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -61,18 +62,17 @@ export default function Integrations() {
         opacity: 1,
         duration: 1,
         ease: "power2.out",
-      })
-        .to(
-          animationContainerRef.current,
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.2,
-            ease: "power2.out",
-          },
-          "+=0.4"
-        );
+      }).to(
+        animationContainerRef.current,
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "power2.out",
+        },
+        "+=0.4"
+      );
 
       // Integration icons animation
       const integrationIcons =
@@ -107,37 +107,50 @@ export default function Integrations() {
       });
 
       // Bottom section container appears first
-      bottomTl.to(bottomSectionRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        ease: "power2.out",
-      })
-      // Then animate paragraph
-      .to(bottomTextRef.current, {
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 0.3,
-        ease: "power2.out",
-      }, "-=0.1")
-      // Then animate tags one by one
-      .to(tagsContainerRef.current?.children || [], {
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 0.2,
-        stagger: 0.03,
-        ease: "power2.out",
-      }, "-=0.05")
-      // Finally animate button
-      .to(bottomButtonRef.current, {
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 0.3,
-        ease: "power2.out",
-      }, "+=0.05");
+      bottomTl
+        .to(bottomSectionRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        })
+        // Then animate paragraph
+        .to(
+          bottomTextRef.current,
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.3,
+            ease: "power2.out",
+          },
+          "-=0.1"
+        )
+        // Then animate tags one by one
+        .to(
+          tagsContainerRef.current?.children || [],
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.2,
+            stagger: 0.03,
+            ease: "power2.out",
+          },
+          "-=0.05"
+        )
+        // Finally animate button
+        .to(
+          bottomButtonRef.current,
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.3,
+            ease: "power2.out",
+          },
+          "+=0.05"
+        );
     }, containerRef);
 
     // Wave animation (existing)
@@ -201,12 +214,13 @@ export default function Integrations() {
             Integrations
           </div>
           <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4 font-deco">
-            <span className="text-blue-500">Everything you need</span>, Talking
-            Together
+            Synced with your{" "}
+            <span className="text-blue-500">University LMS</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            Your apps, your workflows, perfectly in sync. Just the way it should
-            be
+            Connect directly with Moodle, Blackboard, Canvas, and Google
+            Classroom. Your courses, slides, and assignments — automatically
+            organized in Noto.
           </p>
         </div>
 
@@ -288,23 +302,28 @@ export default function Integrations() {
         {/* Bottom Section */}
         <div ref={bottomSectionRef} className="mt-16 space-y-6">
           <p ref={bottomTextRef} className="text-gray-600 text-lg">
-            Seamlessly connect with 100+ popular tools and platforms
+            Seamlessly connect with your university's learning platforms
           </p>
           <div
             ref={tagsContainerRef}
             className="flex flex-wrap justify-center gap-4 text-sm text-gray-500"
           >
-            <span className="px-3 py-1 bg-white rounded-full">Classroom</span>
-            <span className="px-3 py-1 bg-white rounded-full">BlackBoard</span>
+            <span className="px-3 py-1 bg-white rounded-full">Canvas</span>
+            <span className="px-3 py-1 bg-white rounded-full">Blackboard</span>
             <span className="px-3 py-1 bg-white rounded-full">Moodle</span>
             <span className="px-3 py-1 bg-white rounded-full">
-              Google drive
+              Google Classroom
             </span>
-            <span className="px-3 py-1 bg-white rounded-full">+10 more</span>
+            <span className="px-3 py-1 bg-white rounded-full">Brightspace</span>
           </div>
           <button
             ref={bottomButtonRef}
-            className="px-8 py-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors font-medium shadow-lg hover:shadow-xl"
+            onClick={() =>
+              toast("We are working on more integrations! Stay tuned.", {
+                icon: "🚧",
+              })
+            }
+            className="cursor-pointer px-8 py-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors font-medium shadow-lg hover:shadow-xl"
           >
             Explore All Integrations
           </button>

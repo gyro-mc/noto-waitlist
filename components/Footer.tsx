@@ -12,7 +12,6 @@ export default function Footer() {
   const footerLinks = [
     { name: "Benefits", href: "#benefits" },
     { name: "Integrations", href: "#integrations" },
-    { name: "Testimonials", href: "#testimonials" },
     { name: "FAQ", href: "#faq" },
     { name: "Contact", href: "#contact" },
     { name: "404", href: "/404" },

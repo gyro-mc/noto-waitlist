@@ -11,11 +11,11 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    content: ""
+    content: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -29,11 +29,20 @@ export default function Contact() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Initial state - hide all elements with blur
-      gsap.set([titleRef.current, subtitleRef.current, inputRowRef.current, textareaRef.current, buttonRef.current], {
-        opacity: 0,
-        y: 30,
-        filter: "blur(8px)"
-      });
+      gsap.set(
+        [
+          titleRef.current,
+          subtitleRef.current,
+          inputRowRef.current,
+          textareaRef.current,
+          buttonRef.current,
+        ],
+        {
+          opacity: 0,
+          y: 30,
+          filter: "blur(8px)",
+        }
+      );
 
       // Sequential animation timeline
       const tl = gsap.timeline({
@@ -41,7 +50,7 @@ export default function Contact() {
           trigger: sectionRef.current,
           start: "top 80%",
           end: "bottom 20%",
-        }
+        },
       });
 
       // Animate elements sequentially with faster timing
@@ -50,53 +59,69 @@ export default function Contact() {
         y: 0,
         filter: "blur(0px)",
         duration: 0.4,
-        ease: "power2.out"
+        ease: "power2.out",
       })
-      .to(subtitleRef.current, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        duration: 0.4,
-        ease: "power2.out"
-      }, "-=0.1")
-      .to(inputRowRef.current, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        duration: 0.4,
-        ease: "power2.out"
-      }, "-=0.15")
-      .to(textareaRef.current, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        duration: 0.4,
-        ease: "power2.out"
-      }, "-=0.1")
-      .to(buttonRef.current, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        duration: 0.4,
-        ease: "power2.out"
-      }, "-=0.1");
+        .to(
+          subtitleRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            ease: "power2.out",
+          },
+          "-=0.1"
+        )
+        .to(
+          inputRowRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            ease: "power2.out",
+          },
+          "-=0.15"
+        )
+        .to(
+          textareaRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            ease: "power2.out",
+          },
+          "-=0.1"
+        )
+        .to(
+          buttonRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            ease: "power2.out",
+          },
+          "-=0.1"
+        );
 
       // Hover animation for the "Stay Connected" span
-      const connectSpan = headerRef.current?.querySelector('.connect-span');
+      const connectSpan = headerRef.current?.querySelector(".connect-span");
       if (connectSpan) {
-        connectSpan.addEventListener('mouseenter', () => {
+        connectSpan.addEventListener("mouseenter", () => {
           gsap.to(connectSpan, {
             scale: 1.05,
             duration: 0.2,
-            ease: "power2.out"
+            ease: "power2.out",
           });
         });
-        
-        connectSpan.addEventListener('mouseleave', () => {
+
+        connectSpan.addEventListener("mouseleave", () => {
           gsap.to(connectSpan, {
             scale: 1,
             duration: 0.2,
-            ease: "power2.out"
+            ease: "power2.out",
           });
         });
       }
@@ -107,12 +132,13 @@ export default function Contact() {
 
   useEffect(() => {
     if (isSubmitted && successRef.current) {
-      gsap.fromTo(successRef.current, 
+      gsap.fromTo(
+        successRef.current,
         {
           opacity: 0,
           scale: 0.8,
           y: 20,
-          filter: "blur(8px)"
+          filter: "blur(8px)",
         },
         {
           opacity: 1,
@@ -120,38 +146,40 @@ export default function Contact() {
           y: 0,
           filter: "blur(0px)",
           duration: 0.4,
-          ease: "back.out(1.7)"
+          ease: "back.out(1.7)",
         }
       );
     }
   }, [isSubmitted]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Animate form out with blur
     if (formRef.current) {
       gsap.to(formRef.current, {
         opacity: 0.7,
         scale: 0.98,
         filter: "blur(2px)",
-        duration: 0.2
+        duration: 0.2,
       });
     }
-    
+
     try {
-      const response = await fetch('/api/mails', {
-        method: 'POST',
+      const response = await fetch("/api/mails", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -170,20 +198,20 @@ export default function Contact() {
             opacity: 1,
             scale: 1,
             filter: "blur(0px)",
-            duration: 0.2
+            duration: 0.2,
           });
         }
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('Something went wrong. Please try again later.');
+      console.error("Error submitting form:", error);
+      toast.error("Something went wrong. Please try again later.");
       // Animate form back to normal state
       if (formRef.current) {
         gsap.to(formRef.current, {
           opacity: 1,
           scale: 1,
           filter: "blur(0px)",
-          duration: 0.2
+          duration: 0.2,
         });
       }
     } finally {
@@ -193,20 +221,36 @@ export default function Contact() {
 
   return (
     <section ref={sectionRef} className="py-20 px-6 bg-white" id="connect">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-12">
-          <h2 ref={titleRef} className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Let&apos;s <span className="text-blue-500 connect-span cursor-pointer">Stay Connected</span>
+          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6 bubble-shadow-border opacity-100">
+            Contact
+          </div>
+          <h2
+            ref={titleRef}
+            className="text-4xl md:text-6xl font-bold text-gray-900 mb-4 font-deco"
+          >
+            Let&apos;s{" "}
+            <span className="text-blue-500 connect-span cursor-pointer">
+              Stay Connected
+            </span>
           </h2>
-          <p ref={subtitleRef} className="text-lg text-gray-600">
-            Have questions or feedback? Reach out, and we&apos ll get back to you in no time.
+          <p
+            ref={subtitleRef}
+            className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
+          >
+            Have questions or feedback? Reach out, and we&apos;ll get back to
+            you in no time.
           </p>
         </div>
 
         {/* Contact Form */}
         {isSubmitted ? (
-          <div ref={successRef} className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+          <div
+            ref={successRef}
+            className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center"
+          >
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">✓</span>
             </div>
@@ -214,13 +258,21 @@ export default function Contact() {
               Message Sent Successfully!
             </h3>
             <p className="text-green-700">
-              Thanks for reaching out. We&apos;ll get back to you within 24 hours.
+              Thanks for reaching out. We&apos;ll get back to you within 24
+              hours.
             </p>
           </div>
         ) : (
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            className="space-y-6 max-w-2xl mx-auto"
+          >
             {/* Name and Email Row */}
-            <div ref={inputRowRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              ref={inputRowRef}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
               <div>
                 <input
                   type="text"

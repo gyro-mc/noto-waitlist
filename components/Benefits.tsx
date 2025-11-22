@@ -1,12 +1,12 @@
-"use client"
+"use client";
 import {
-  BookOpenIcon,
-  CpuChipIcon,
-  BuildingLibraryIcon,
-  MoonIcon,
-  PencilSquareIcon,
-  PuzzlePieceIcon,
-} from "@heroicons/react/24/outline";
+  FolderOpen,
+  Sparkles,
+  GraduationCap,
+  RefreshCw,
+  LayoutTemplate,
+  FileText,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function Benefits() {
@@ -21,9 +21,12 @@ export default function Benefits() {
           setIsVisible(true);
           // Animate cards one by one with delay
           benefits.forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index]);
-            }, 200 + index * 150); // Start after header animation, then stagger
+            setTimeout(
+              () => {
+                setVisibleCards((prev) => [...prev, index]);
+              },
+              200 + index * 150
+            ); // Start after header animation, then stagger
           });
         }
       },
@@ -39,52 +42,34 @@ export default function Benefits() {
 
   const benefits = [
     {
-      icon: (
-        <CpuChipIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "AI-Powered Learning",
-      description:
-        "Get smart suggestions and create notes effortlessly with AI.",
+      icon: <FolderOpen className="w-8 h-8 text-blue-600" />,
+      title: "Unified Course Space",
+      description: "All your files and notes in one place.",
     },
     {
-      icon: (
-        <PuzzlePieceIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "Interactive Quizzes",
-      description:
-        "Test your knowledge, track progress, and make learning fun.",
+      icon: <Sparkles className="w-8 h-8 text-blue-600" />,
+      title: "AI Learning Tools",
+      description: "Notes, explanations, and study help on demand.",
     },
     {
-      icon: (
-        <BuildingLibraryIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "Course Organization",
-      description:
-        "Keep all your lectures, materials, and notes neatly structured in one place.",
+      icon: <GraduationCap className="w-8 h-8 text-blue-600" />,
+      title: "Knowledge Testing",
+      description: "AI-generated quizzes, flashcards, and practice questions.",
     },
     {
-      icon: (
-        <BookOpenIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "Smart Study Space",
-      description:
-        "Combine your notes, quizzes, and materials for a smoother learning experience.",
+      icon: <RefreshCw className="w-8 h-8 text-blue-600" />,
+      title: "LMS Sync",
+      description: "Pull courses and files from your university automatically.",
     },
     {
-      icon: (
-        <PencilSquareIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "Effortless Note-Taking",
-      description:
-        "Capture ideas, lecture highlights, and study notes all in one organized space.",
+      icon: <LayoutTemplate className="w-8 h-8 text-blue-600" />,
+      title: "Custom Workspaces",
+      description: "Organize courses your way — clean and flexible.",
     },
     {
-      icon: (
-        <MoonIcon className="flex flex-row justify-center items-center w-20 h-20 bubble-shadow-border text-blue-400 text-sm font-light  p-4 rounded-full" />
-      ),
-      title: "Clean & Distraction-Free",
-      description:
-        "A modern, minimal interface built to help you focus on what matters.",
+      icon: <FileText className="w-8 h-8 text-blue-600" />,
+      title: "Rich Notes Editor",
+      description: "Fast, clean note-taking with a Notion-style editor.",
     },
   ];
 
@@ -97,7 +82,7 @@ export default function Benefits() {
             Benefits
           </div>
           <h2
-            className={`text-3xl md:text-4xl font-bold text-gray-900 mb-4 transition-all duration-700 ${
+            className={`text-4xl md:text-6xl font-bold text-gray-900 mb-4 font-deco transition-all duration-700 ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -106,7 +91,7 @@ export default function Benefits() {
             Why Choose <span className="text-blue-500">Noto</span>?
           </h2>
           <p
-            className={`text-lg text-gray-600 max-w-2xl mx-auto transition-all duration-700 delay-200 ${
+            className={`text-lg md:text-xl text-gray-600 max-w-2xl mx-auto transition-all duration-700 delay-200 ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"

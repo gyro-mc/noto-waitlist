@@ -9,7 +9,6 @@ const WaitlistSchema = z.object({
     .min(1, "Email is required"),
 });
 
-
 interface ApiResponse {
   success: boolean;
   message: string;
@@ -18,11 +17,20 @@ interface ApiResponse {
 
 // Constants
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!;
-const SHEET_RANGE = "Sheet1!A:B";
+const SHEET_RANGE = "Sheet1!A:H";
 
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<ApiResponse>> {
+  const headers = req.headers;
+  const ip = headers.get("x-real-ip") || headers.get("x-forwarded-for");
+  const country = headers.get("x-vercel-ip-country");
+  const region = headers.get("x-vercel-ip-country-region");
+  const city = headers.get("x-vercel-ip-city");
+
+  const latitude = headers.get("x-vercel-ip-latitude");
+  const longitude = headers.get("x-vercel-ip-longitude");
+  console.log(ip, country, region, city, latitude, longitude);
   try {
     // Parse request body
     const body = await req.json();
@@ -48,7 +56,7 @@ export async function POST(
       projectId: process.env.GOOGLE_PROJECT_ID!,
       credentials: {
         type: process.env.GOOGLE_SERVICE_ACCOUNT_TYPE as "service_account",
-        private_key: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+        private_key: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
         client_email: process.env.GOOGLE_CLIENT_EMAIL!,
         client_id: process.env.GOOGLE_CLIENT_ID!,
         token_url: process.env.GOOGLE_TOKEN_URI!,
@@ -85,7 +93,18 @@ export async function POST(
       range: SHEET_RANGE,
       valueInputOption: "USER_ENTERED",
       requestBody: {
-        values: [[email, createdAt]],
+        values: [
+          [
+            email,
+            createdAt,
+            ip ?? "",
+            country ?? "",
+            region ?? "",
+            city ?? "",
+            latitude ?? "",
+            longitude ?? "",
+          ],
+        ],
       },
     });
 
