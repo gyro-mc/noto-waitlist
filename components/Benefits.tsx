@@ -38,7 +38,7 @@ export default function Benefits() {
     }
 
     return () => observer.disconnect();
-  }, []);
+  });
 
   const benefits = [
     {

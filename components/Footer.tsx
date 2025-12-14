@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import { X, Linkedin, Instagram, Facebook } from "lucide-react";
+import { X, Linkedin, Instagram, Github } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
@@ -18,15 +18,15 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { name: "X (Twitter)", icon: X, href: "#" },
-    { name: "LinkedIn", icon: Linkedin, href: "#" },
-    { name: "Instagram", icon: Instagram, href: "#" },
-    { name: "Facebook", icon: Facebook, href: "#" },
+    { name: "X (Twitter)", icon: X, href: "https://x.com/ADilmi38503" },
+    { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/dilmi-abderrahmane-861366390/" },
+    { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/abdelrahman.dlm/" },
+    { name: "GitHub", icon: Github, href: "https://github.com/gyro-mc" },
   ];
 
   // Handle hover animations for social icons
   useEffect(() => {
-    const socialElements = socialRefs.current ;
+    const socialElements = socialRefs.current;
 
     socialElements.forEach((element) => {
       if (!element) return;
@@ -79,8 +79,8 @@ export default function Footer() {
     return () => {
       socialElements.forEach((element) => {
         if (element) {
-          element.removeEventListener("mouseenter", () => {});
-          element.removeEventListener("mouseleave", () => {});
+          element.removeEventListener("mouseenter", () => { });
+          element.removeEventListener("mouseleave", () => { });
         }
       });
     };
