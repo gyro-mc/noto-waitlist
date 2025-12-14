@@ -337,7 +337,7 @@ export default function Hero() {
         ref={subHeadingRef}
         className="text-3xl md:text-5xl font-bold text-gray-700 mb-8 max-w-4xl"
       >
-        the study tool that makes student life easier.
+        Everything you need to study—nothing you don’t.
       </h2>
 
       {/* Subtitle */}
@@ -346,12 +346,7 @@ export default function Hero() {
         className="text-lg md:text-xl text-gray-600 mb-16 max-w-2xl leading-relaxed"
       >
         <p className="subtitle-text">
-          Noto brings all your courses and notes together in one intelligent
-          space
-          <span className="hidden sm:inline"> — </span>
-          <span className="block sm:inline">
-            helping you stay organized, focused, and ready to learn.
-          </span>
+          Noto is a complete study system that replaces scattered tools with one structured workflow—from notes and materials to quizzes and recall.
         </p>
       </div>
 
