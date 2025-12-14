@@ -382,7 +382,7 @@ export default function Hero() {
             )}
             <input
               type="email"
-              placeholder="Enter your email (preferably your school email)"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
