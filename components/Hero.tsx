@@ -20,9 +20,9 @@ export default function Hero() {
   const wrapTextForAnimation = (element: HTMLElement): void => {
     // Create wrapper spans for each logical line
     const firstPart =
-      "Noto brings all your courses and notes together in one intelligent space";
+      "Noto is a complete study system that replaces scattered tools ";
     const secondPart =
-      "helping you stay organized, focused, and ready to learn.";
+      "with one structured workflow—from notes and materials to quizzes and recall.";
 
     // Clear the element
     element.innerHTML = "";
