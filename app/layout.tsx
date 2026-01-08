@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import SmoothScrolling from "@/components/SmoothScrolling";
 
@@ -69,6 +70,7 @@ export default function RootLayout({
               },
             }}
           />
+          <SpeedInsights />
         </SmoothScrolling>
       </body>
     </html>
